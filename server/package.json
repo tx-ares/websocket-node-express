@@ -11,6 +11,10 @@
     "websocket",
     "typescript"
   ],
+  "main": "dist/index.js",
+  "files": [
+     "dist/index.js"
+  ],
   "author": "Adan Huerta",
   "license": "ISC",
   "dependencies": {
