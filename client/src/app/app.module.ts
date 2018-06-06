@@ -7,20 +7,20 @@ import { MatButtonModule, MatCheckboxModule, MatInputModule, MatButtonToggleModu
 import { AppComponent } from './app.component';
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    FormsModule,
-    MatButtonToggleModule,
-    MatButtonModule,
-    MatIconModule,
-    MatInputModule,
-    MatCheckboxModule
-  ],
-  providers: [Title],
-  bootstrap: [AppComponent]
+	declarations: [
+		AppComponent
+	],
+	imports: [
+		BrowserModule,
+		BrowserAnimationsModule,
+		FormsModule,
+		MatButtonToggleModule,
+		MatButtonModule,
+		MatIconModule,
+		MatInputModule,
+		MatCheckboxModule
+	],
+	providers: [Title],
+	bootstrap: [AppComponent]
 })
 export class AppModule { }
