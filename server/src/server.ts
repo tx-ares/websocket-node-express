@@ -1,60 +1,32 @@
 import * as express from 'express';
 import * as http from 'http';
-import * as WebSocket from 'ws';
+
+import * as Sockette from 'sockette';
 
 const app = express();
 
-//init a simple http server
+//initialize a simple http server
 const server = http.createServer(app);
 
-//init the WebSocket server instance
-const wss = new WebSocket.Server({ server });
-
-wss.on('connection', (ws: WebSocket) => {
-
-    ws.isAlive = true;
-
-    ws.on('pong', () => {
-        ws.isAlive = true;
-    });
-
-    //when connection is established, add a simple event
-    ws.on('message', (message: string) => {
-
-        //log the received message and send it back to client
-        console.log('received: %s', message);
-
-        const broadcastRegex = /^broadcast\:/;
-
-        if (broadcastRegex.test(message)) {
-            message = message.replace(broadcastRegex, '');
-
-            //Send back the message to the other clients
-            wss.clients
-                .forEach(client => {
-                    if (client != ws) {
-                        client.send(`Hello, broadcast message -> ${message}`);
-                    }
-                });
-        } else {
-            ws.send(`Hello, you sent: ${message}`);
-        }
-    });
-
-    //send feedback to the incoming connection
-    ws.send('Hi there, I am a WebSocket server on port 4000!');
+//initialize the WebSocket server instance
+const ws = new Sockette('ws://localhost:4000', {
+  timeout: 5e3,
+  maxAttempts: 10,
+  onopen: e => console.log('Connected!', e),
+  onmessage: e => console.log('Received:', e),
+  onreconnect: e => console.log('Reconnecting...', e),
+  onmaximum: e => console.log('Stop Attempting!', e),
+  onclose: e => console.log('Closed!', e),
+  onerror: e => console.log('Error:', e)
 });
 
-setInterval(() => {
-    wss.clients.forEach((ws: ExtWebSocket) => {
-        if (!ws.isAlive) return ws.terminate();
+ws.send('Hello, world!');
+ws.close(); // graceful shutdown
 
-        ws.isAlive = false;
-        ws.ping(null, false, true);
-    });
-}, 10000);
+// Reconnect 10s later
+setTimeout(ws.reconnect, 10e3);
 
-//start the Server
+// start server
 server.listen(process.env.PORT || 4000, () => {
-    console.log(`Server started on port ${server.address().port} :)`);
+    console.log((`Server started on port ${server.address().port} :)`))
 });
