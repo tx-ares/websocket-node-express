@@ -4,7 +4,7 @@ import * as WebSocket from 'ws';
 
 const app = express();
 
-//init simple http server
+//init a simple http server
 const server = http.createServer(app);
 
 //init the WebSocket server instance
@@ -12,18 +12,21 @@ const wss = new WebSocket.Server({ server });
 
 wss.on('connection', (ws: WebSocket) => {
 
-    //connection is up, let's add a simple simple event
+    //when connection is established, add a simple event
     ws.on('message', (message: string) => {
 
-        //log the received message and send it back to the client
+        //log the received message and send it back to client
         console.log('received: %s', message);
-        ws.send(`Hello, you sent -> ${message}`);
+
+        ws.send(`Hello, you sent: ${message}`);
+
     });
 
-    ws.send('Hi there, I am a WebSocket server');
+    //send feedback to the incoming connection
+    ws.send('Hi there, I am a WebSocket server on port 4000!');
 });
 
-//start server
+//start the Server
 server.listen(process.env.PORT || 4000, () => {
     console.log(`Server started on port ${server.address().port} :)`);
 });
