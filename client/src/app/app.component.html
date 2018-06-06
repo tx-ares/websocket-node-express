@@ -24,4 +24,16 @@
             <input matInput placeholder="Enter your name" type="text" [(ngModel)]="sender" [ngModelOptions]="{updateOn: 'blur'}">
         </mat-form-field>
     </div>
+    <div *ngIf="!!sender" #viewer class="body">
+        <div class="viewer">
+            <div class="message" *ngFor="let msg of serverMessages" [ngClass]="{'bold': msg.isBroadcast, 'others': !isMine(msg)}">
+                <div class="badge" [style.backgroudColor]="getSenderColor(msg.sender)">{{ getSenderInitials(msg.sender) }}</div>
+                <div class="content" [ngClass]="{'bold': msg.isBroadcast, 'others': !isMine(msg)}">
+                    <i *ngIf="msg.isBroadcast" class="material-icons">speaker_phone</i>
+                    <span>{{ msg.content }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
 </div>

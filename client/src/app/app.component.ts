@@ -41,7 +41,7 @@ export class AppComponent implements AfterViewInit {
 
     // public setTitle( newTitle: string) {
     //    newTitle = "SocketChat";
-    //    this.titleService.setTitle( newTitle );
+    //    this.titleService.setTitle( 'YO!' );
     //  }
 
     ngAfterViewInit(): void {
