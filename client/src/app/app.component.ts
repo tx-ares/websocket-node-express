@@ -4,103 +4,103 @@ import { WebSocketSubject } from 'rxjs/observable/dom/WebSocketSubject';
 // import { Title } from '@angular/platform-browser';
 
 export class Message {
-    constructor(
-        public sender: string,
-        public content: string,
-        public isBroadcast = false,
-    ) { }
+	constructor(
+		public sender: string,
+		public content: string,
+		public isBroadcast = false,
+	) { }
 }
 
 @Component({
     selector: 'app-root',
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss']
+	templateUrl: './app.component.html',
+	styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements AfterViewInit {
 
-    @ViewChild('viewer') private viewer: ElementRef;
+	@ViewChild('viewer') private viewer: ElementRef;
 
-    public serverMessages = new Array<Message>();
+	public serverMessages = new Array<Message>();
 
-    public clientMessage = '';
-    public isBroadcast = false;
-    public sender = '';
+	public clientMessage = '';
+	public isBroadcast = false;
+	public sender = '';
 
-    private socket$: WebSocketSubject<Message>;
+	private socket$: WebSocketSubject<Message>;
 
-    constructor() {
-        this.socket$ = WebSocketSubject.create('ws://localhost:4000'); // Using ws WebSocket we create a connection to the server at port 4000
+	constructor() {
+		this.socket$ = WebSocketSubject.create('ws://localhost:4000'); // Using ws WebSocket we create a connection to the server at port 4000
 
-        this.socket$
-            .subscribe(
-           		(message) => this.serverMessages.push(message) && this.scroll(),
-                (err) => console.error(err),
-                () => console.warn('Completed!')
-            );
-    }
+		this.socket$
+			.subscribe(
+				(message) => this.serverMessages.push(message) && this.scroll(),
+				(err) => console.error(err),
+				() => console.warn('Completed!')
+			);
+	}
 
-    // public setTitle( newTitle: string) {
-    //    newTitle = "SocketChat";
-    //    this.titleService.setTitle( 'YO!' );
-    //  }
+	// public setTitle( newTitle: string) {
+	//    newTitle = "SocketChat";
+	//    this.titleService.setTitle( 'YO!' );
+	//  }
 
-    ngAfterViewInit(): void {
-        this.scroll();
-    }
+	ngAfterViewInit(): void {
+		this.scroll();
+	}
 
-    public toggleIsBroadcast(): void {
-        this.isBroadcast = !this.isBroadcast;
-    }
+	public toggleIsBroadcast(): void {
+		this.isBroadcast = !this.isBroadcast;
+	}
 
-    public send(): void {
-        const message = new Message(this.sender, this.clientMessage, this.isBroadcast);
+	public send(): void {
+		const message = new Message(this.sender, this.clientMessage, this.isBroadcast);
 
-        this.serverMessages.push(message);
-        this.socket$.next(<any>JSON.stringify(message));
-        this.clientMessage = '';
-        this.scroll();
-    }
+		this.serverMessages.push(message);
+		this.socket$.next(<any>JSON.stringify(message));
+		this.clientMessage = '';
+		this.scroll();
+	}
 
-    public isMine(message: Message): boolean {
-        return message && message.sender === this.sender;
-    }
+	public isMine(message: Message): boolean {
+		return message && message.sender === this.sender;
+	}
 
-    public getSenderInitials(sender: string): string {
-        return sender && sender.substring(0, 2).toLocaleUpperCase();
-    }
+	public getSenderInitials(sender: string): string {
+		return sender && sender.substring(0, 2).toLocaleUpperCase();
+	}
 
-    private getSenderColor(sender: string): string {
-        const alpha = '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZ';
-        const initials = this.getSenderInitials(sender);
-        const value = Math.ceil((alpha.indexOf(initials[0]) + alpha.indexOf(initials[1])) * 255 * 255 * 255 / 70);
-        return '#' + value.toString(16).padEnd(6, '0');
-    }
+	private getSenderColor(sender: string): string {
+		const alpha = '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZ';
+		const initials = this.getSenderInitials(sender);
+		const value = Math.ceil((alpha.indexOf(initials[0]) + alpha.indexOf(initials[1])) * 255 * 255 * 255 / 70);
+		return '#' + value.toString(16).padEnd(6, '0');
+	}
 
-    private scroll(): void {
-        setTimeout(() => {
-            this.scrollToBottom();
-        }, 100);
-    }
+	private scroll(): void {
+		setTimeout(() => {
+			this.scrollToBottom();
+		}, 100);
+	}
 
-    private getDiff(): number {
-        const nativeElement = this.viewer.nativeElement;
-        return nativeElement.scrollHeight - (nativeElement.scrollTop + nativeElement.clientHeight);
-    }
+	private getDiff(): number {
+		const nativeElement = this.viewer.nativeElement;
+		return nativeElement.scrollHeight - (nativeElement.scrollTop + nativeElement.clientHeight);
+	}
 
-    private scrollToBottom(t = 1, b = 0): void {
-        if (b < 1) {
-            b = this.getDiff();
-        }
-        if (b > 0 && t <= 120) {
-            setTimeout(() => {
-                const diff = this.easeInOutSin(t / 120) * this.getDiff();
-                this.viewer.nativeElement.scrollTop += diff;
-                this.scrollToBottom(++t, b);
-            }, 1 / 60);
-        }
-    }
+	private scrollToBottom(t = 1, b = 0): void {
+		if (b < 1) {
+			b = this.getDiff();
+		}
+		if (b > 0 && t <= 120) {
+			setTimeout(() => {
+				const diff = this.easeInOutSin(t / 120) * this.getDiff();
+				this.viewer.nativeElement.scrollTop += diff;
+				this.scrollToBottom(++t, b);
+			}, 1 / 60);
+		}
+	}
 
-    private easeInOutSin(t): number {
-        return (1 + Math.sin(Math.PI * t - Math.PI / 2)) / 2;
-    }
+	private easeInOutSin(t): number {
+		return (1 + Math.sin(Math.PI * t - Math.PI / 2)) / 2;
+	}
 }
