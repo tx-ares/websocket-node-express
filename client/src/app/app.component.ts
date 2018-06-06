@@ -1,20 +1,23 @@
 import { Component, ViewChild, ElementRef, OnInit, AfterViewInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { WebSocketSubject } from 'rxjs/observable/dom/WebSocketSubject';
+// import { Title } from '@angular/platform-browser';
+
 export class Message {
     constructor(
         public sender: string,
         public content: string,
-        public isBroadcast = false
+        public isBroadcast = false,
     ) { }
 }
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements AfterViewInit {
+
     @ViewChild('viewer') private viewer: ElementRef;
 
     public serverMessages = new Array<Message>();
@@ -30,11 +33,16 @@ export class AppComponent implements AfterViewInit {
 
         this.socket$
             .subscribe(
-                (message) => this.serverMessages.push(message) && this.scroll(),
+           		(message) => this.serverMessages.push(message) && this.scroll(),
                 (err) => console.error(err),
                 () => console.warn('Completed!')
             );
     }
+
+    // public setTitle( newTitle: string) {
+    //    newTitle = "SocketChat";
+    //    this.titleService.setTitle( newTitle );
+    //  }
 
     ngAfterViewInit(): void {
         this.scroll();
@@ -62,7 +70,7 @@ export class AppComponent implements AfterViewInit {
     }
 
     private getSenderColor(sender: string): string {
-        const alpha = '0123456789ABCDEFGHIJKLMOPQRSTUVWXYZ';
+        const alpha = '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZ';
         const initials = this.getSenderInitials(sender);
         const value = Math.ceil((alpha.indexOf(initials[0]) + alpha.indexOf(initials[1])) * 255 * 255 * 255 / 70);
         return '#' + value.toString(16).padEnd(6, '0');
