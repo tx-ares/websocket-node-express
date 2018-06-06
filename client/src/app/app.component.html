@@ -24,6 +24,7 @@
             <input matInput placeholder="Enter your name" type="text" [(ngModel)]="sender" [ngModelOptions]="{updateOn: 'blur'}">
         </mat-form-field>
     </div>
+    <div *ngIf="!sender" #viewer></div>
     <div *ngIf="!!sender" #viewer class="body">
         <div class="viewer">
             <div class="message" *ngFor="let msg of serverMessages" [ngClass]="{'bold': msg.isBroadcast, 'others': !isMine(msg)}">
