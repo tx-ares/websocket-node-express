@@ -2,23 +2,26 @@
   "name": "websocket-node",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index",
+  "typings": "dist/index",
   "scripts": {
-    "start": "node ./dist/server/server.js"
+    "start": "node ./dist/server/server.js",
+    "start-simple": "node ./dist/server/server-simple.js",
+    "start-2": "node ./dist/server/server-2.js"
   },
   "keywords": [
     "nodejs",
     "websocket",
     "typescript"
   ],
-  "main": "dist/index.js",
   "files": [
-     "dist/index.js"
+    "dist/index.js"
   ],
   "author": "Adan Huerta",
   "license": "ISC",
   "dependencies": {
     "express": "^4.16.3",
+    "sockette": "^2.0.0",
     "ws": "^5.2.0"
   },
   "devDependencies": {
