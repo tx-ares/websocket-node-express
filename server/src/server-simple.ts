@@ -23,7 +23,7 @@ wss.on('connection', (ws: WebSocket) => {
     });
 
     //send feedback to the incoming connection
-    ws.send('Hi there, I am a WebSocket server on port 4000!');
+    ws.send('Hi there, I am a WebSocket server!');
 });
 
 //start the Server
